@@ -99,27 +99,41 @@ This creates a local virtual environment and installs dependencies. Only needs t
 
 ### PDF Generator: `scripts/generate_fillable_pdf.py`
 
-Generates branded, fillable PDF documents (Consulting Services Agreement).
+Generates branded, fillable PDF documents.
+
+**Available Templates**:
+- `agreement` - Consulting Services Agreement (default)
+- `sow` - Statement of Work
 
 **Run using the local venv**:
 ```bash
 # From the skill directory
-.venv/bin/python scripts/generate_fillable_pdf.py --output /path/to/contract.pdf
+# Agreement
+.venv/bin/python scripts/generate_fillable_pdf.py --template agreement --output /path/to/contract.pdf
+
+# Statement of Work
+.venv/bin/python scripts/generate_fillable_pdf.py --template sow --output /path/to/sow.pdf --title "AI Strategy Session"
 ```
 
 **Arguments**:
-- `--output, -o`: Output PDF path (default: current directory)
+- `--template, -t`: Document template (`agreement` or `sow`)
+- `--output, -o`: Output PDF path
 - `--logo`: Custom logo path (default: uses `assets/CTF-logo.jpg`)
+- `--title`: SOW title (for sow template only)
 
-**What it creates**:
+**Agreement template creates**:
 - 2-page Consulting Services Agreement
-- Navy header with logo and "LEGAL AGREEMENT" label
-- Orange/Blue/Purple gradient accent bar
-- 10 numbered sections with orange circle indicators
-- Fillable form fields: Client name, Effective date, Signatures, Titles, Dates
-- Branded footer with tagline
+- 10 numbered sections (Services, Fees, IP, Confidentiality, etc.)
+- Fillable fields: Client name, Effective date, Signatures
 
-**When to use**: When user requests a consulting agreement, services contract, or branded legal document.
+**SOW template creates**:
+- Multi-page Statement of Work
+- 7 numbered sections (Scope, Deliverables, Timeline, Fees, Out of Scope, Assumptions, Acceptance)
+- Fillable fields: SOW Title, Client, Date, SOW Number, plus multiline detail fields per section
+
+**When to use**:
+- `agreement`: When user requests a consulting agreement or services contract
+- `sow`: When user requests a statement of work or project scope document
 
 ### Script Execution Pattern
 
