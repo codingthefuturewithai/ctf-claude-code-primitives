@@ -80,3 +80,35 @@ Located at: `assets/CTF-banner.png`
 - Dark mode: Navy background, white text, orange accents
 - Light mode: White/light background, navy text, orange accents
 - Always maintain adequate contrast for accessibility
+
+---
+
+## Bundled Scripts
+
+### PDF Generator: `scripts/generate_fillable_pdf.py`
+
+Generates branded, fillable PDF documents (Consulting Services Agreement).
+
+**Dependencies**: `reportlab` (install via `pip install reportlab`)
+
+**Usage**:
+```bash
+# Generate to current directory
+python scripts/generate_fillable_pdf.py
+
+# Specify output path
+python scripts/generate_fillable_pdf.py --output /path/to/contract.pdf
+
+# Use custom logo
+python scripts/generate_fillable_pdf.py --logo /path/to/logo.jpg --output contract.pdf
+```
+
+**What it creates**:
+- 2-page Consulting Services Agreement
+- Navy header with logo and "LEGAL AGREEMENT" label
+- Orange/Blue/Purple gradient accent bar
+- 10 numbered sections with orange circle indicators
+- Fillable form fields: Client name, Effective date, Signatures, Titles, Dates
+- Branded footer with tagline
+
+**When to use**: When user requests a consulting agreement, services contract, or branded legal document.
