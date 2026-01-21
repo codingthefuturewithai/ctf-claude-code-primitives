@@ -73,17 +73,48 @@ Apply Coding the Future with AI (CTFAI) brand styling to any artifact. Generate 
 
 | Asset | Path | Usage |
 |-------|------|-------|
-| Logo | `~/.claude/skills/ctfai-brand/assets/CTF-logo.jpg` | Headers, letterheads |
-| Banner | `~/.claude/skills/ctfai-brand/assets/CTF-banner.png` | Hero sections |
-| CSS | `~/.claude/skills/ctfai-brand/assets/brand.css` | Web artifacts |
+| Logo | `<skill_dir>/assets/CTF-logo.jpg` | Headers, letterheads |
+| Banner | `<skill_dir>/assets/CTF-banner.png` | Hero sections |
+| CSS | `<skill_dir>/assets/brand.css` | Web artifacts |
+
+---
+
+## Script Management
+
+**All generated scripts and PDFs go in**: `<skill_dir>/generated/`
+
+The skill directory is wherever this SKILL.md is installed (detect at runtime - see examples below).
+
+**Before generating a new script**:
+1. Check `<skill_dir>/generated/` for existing scripts
+2. If a similar script exists (e.g., `generate_csa_pdf.py` for consulting agreements), consider adapting it
+3. Only create a new script if the document type is genuinely different
+
+**Cleanup**: If `generated/` contains more than 5 scripts, notify the user: "There are X scripts in the generated folder. Would you like me to clean up old ones?"
 
 ---
 
 ## PDF Generation with reportlab AcroForm
 
-**Installation** (one-time):
+**CRITICAL: Always use the skill's virtual environment. NEVER install to global Python.**
+
+**First-time setup** (creates venv in skill directory - cross-platform):
 ```bash
-pip install reportlab
+# Find skill directory first, then:
+cd <skill_dir>
+python3 -m venv .venv
+# On macOS/Linux:
+.venv/bin/pip install reportlab
+# On Windows:
+.venv\Scripts\pip install reportlab
+```
+
+**Running scripts** (always use the venv):
+```bash
+# macOS/Linux:
+<skill_dir>/.venv/bin/python <skill_dir>/generated/script_name.py
+# Windows:
+<skill_dir>\.venv\Scripts\python <skill_dir>\generated\script_name.py
 ```
 
 ### Creating Fillable Text Fields
@@ -190,9 +221,17 @@ c.save()
 ### Complete Minimal Example
 
 ```python
+from pathlib import Path
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.colors import HexColor
+
+# Cross-platform paths - script lives in <skill_dir>/generated/
+SCRIPT_DIR = Path(__file__).parent
+SKILL_DIR = SCRIPT_DIR.parent
+ASSETS_DIR = SKILL_DIR / "assets"
+GENERATED_DIR = SKILL_DIR / "generated"
+GENERATED_DIR.mkdir(exist_ok=True)
 
 NAVY = HexColor("#1a365d")
 ORANGE = HexColor("#dd6b20")
@@ -251,8 +290,11 @@ def create_branded_form(output_path, logo_path):
     c.save()
     print(f"Created: {output_path}")
 
-# Usage
-create_branded_form("agreement.pdf", "~/.claude/skills/ctfai-brand/assets/CTF-logo.jpg")
+# Usage - output to generated/ directory
+create_branded_form(
+    str(GENERATED_DIR / "agreement.pdf"),
+    str(ASSETS_DIR / "CTF-logo.jpg")
+)
 ```
 
 ---
@@ -261,12 +303,14 @@ create_branded_form("agreement.pdf", "~/.claude/skills/ctfai-brand/assets/CTF-lo
 
 When user requests a branded PDF:
 
-1. **Understand the need**: Interview user about document purpose, sections, what fields should be fillable
-2. **Propose structure**: List sections, identify fillable fields (client name, date, signature, etc.)
-3. **Get approval**: User confirms structure before generation
-4. **Generate code**: Write Python script using reportlab with brand styling
-5. **Execute**: Run script to produce PDF
-6. **Deliver**: Provide branded PDF with real fillable fields
+1. **Check for existing scripts**: Look in `<skill_dir>/generated/` for reusable scripts
+2. **Understand the need**: Interview user about document purpose, sections, what fields should be fillable
+3. **Propose structure**: List sections, identify fillable fields (client name, date, signature, etc.)
+4. **Get approval**: User confirms structure before generation
+5. **Ensure venv exists**: If `.venv` doesn't exist in skill directory, create it and install reportlab
+6. **Generate code**: Write Python script to `<skill_dir>/generated/`
+7. **Execute with venv**: Run script using `<skill_dir>/.venv/bin/python` (or `\.venv\Scripts\python` on Windows)
+8. **Deliver**: Provide branded PDF (also in generated/ directory)
 
 **The goal is a reusable template** - user fills in fields for each new client, not regenerating the PDF.
 
