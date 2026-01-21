@@ -1,5 +1,5 @@
 ---
-name: ctfai-brand
+name: ctf-claude-code-primitives:ctfai-brand
 description: Apply Coding the Future with AI brand styling. Use this skill when the user asks to create branded content, apply brand colors, style documents with CTFAI branding, or create presentations/websites/themes with company branding.
 user-invocable: true
 ---
