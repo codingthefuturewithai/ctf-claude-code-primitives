@@ -1,0 +1,289 @@
+/* CTFAI Brand Styles */
+
+:root {
+    --navy: #1B2838;
+    --orange: #F5A623;
+    --blue: #7DD3FC;
+    --purple: #C084FC;
+    --white: #FFFFFF;
+    --light-gray: #F0F5FA;
+    --text-gray: #2d3748;
+}
+
+@page {
+    size: letter;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text-gray);
+}
+
+/* Header */
+.header {
+    background-color: var(--navy);
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header .logo {
+    width: 45px;
+    height: 45px;
+}
+
+.header .company-name {
+    font-size: 16pt;
+    font-weight: bold;
+    color: var(--white);
+}
+
+.header .company-name .ai {
+    color: var(--orange);
+}
+
+.header .doc-type {
+    color: var(--blue);
+    font-size: 9pt;
+}
+
+/* Gradient bar */
+.gradient-bar {
+    height: 4px;
+    display: flex;
+}
+
+.gradient-bar .orange { background-color: var(--orange); flex: 1; }
+.gradient-bar .blue { background-color: var(--blue); flex: 1; }
+.gradient-bar .purple { background-color: var(--purple); flex: 1; }
+
+/* Footer */
+.footer {
+    background-color: var(--navy);
+    padding: 10px 50px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.footer .doc-info {
+    color: var(--blue);
+    font-size: 7pt;
+}
+
+.footer .tagline {
+    color: var(--white);
+    font-style: italic;
+    font-size: 7pt;
+}
+
+/* Content area */
+.content {
+    padding: 30px 50px 60px 50px;
+}
+
+/* Document title */
+h1 {
+    color: var(--navy);
+    font-size: 22pt;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+h1::after {
+    content: "";
+    display: block;
+    width: 320px;
+    height: 3px;
+    background-color: var(--orange);
+    margin-top: 8px;
+}
+
+.intro {
+    margin: 20px 0;
+    color: var(--text-gray);
+}
+
+/* Info box (parties, project info) */
+.info-box {
+    background-color: var(--light-gray);
+    border-left: 3px solid var(--orange);
+    border-radius: 5px;
+    padding: 15px 20px;
+    margin: 20px 0;
+}
+
+.info-row {
+    display: flex;
+    margin: 8px 0;
+    align-items: center;
+}
+
+.info-label {
+    font-weight: bold;
+    color: var(--navy);
+    width: 120px;
+}
+
+.info-value {
+    color: var(--text-gray);
+}
+
+.info-field {
+    border: 1px solid var(--navy);
+    background: var(--white);
+    padding: 4px 8px;
+    min-width: 200px;
+    min-height: 20px;
+}
+
+/* Sections */
+.section {
+    margin: 25px 0;
+    page-break-inside: avoid;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.section-number {
+    background-color: var(--orange);
+    color: var(--white);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 10pt;
+}
+
+.section-title {
+    color: var(--navy);
+    font-weight: bold;
+    font-size: 11pt;
+}
+
+.section-content {
+    margin-left: 34px;
+    color: var(--text-gray);
+    font-size: 9pt;
+}
+
+.section-content p {
+    margin-bottom: 8px;
+}
+
+.section-content ul {
+    margin-left: 20px;
+    margin-bottom: 8px;
+}
+
+.section-divider {
+    width: 100px;
+    height: 1px;
+    background-color: var(--orange);
+    margin: 15px 0 15px 34px;
+    opacity: 0.5;
+}
+
+/* Fillable field for details */
+.detail-field {
+    border: 1px solid var(--navy);
+    background: var(--white);
+    min-height: 50px;
+    padding: 8px;
+    margin: 10px 0;
+    font-size: 9pt;
+}
+
+/* Signature section */
+.signature-section {
+    margin-top: 30px;
+    border-top: 2px solid var(--navy);
+    padding-top: 20px;
+}
+
+.signature-heading {
+    color: var(--navy);
+    font-weight: bold;
+    font-size: 10pt;
+    margin-bottom: 5px;
+}
+
+.signature-intro {
+    color: var(--text-gray);
+    font-size: 9pt;
+    margin-bottom: 25px;
+}
+
+.signature-boxes {
+    display: flex;
+    gap: 30px;
+}
+
+.signature-box {
+    flex: 1;
+    background-color: var(--light-gray);
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.signature-box-title {
+    color: var(--orange);
+    font-weight: bold;
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.signature-box-company {
+    color: var(--navy);
+    font-weight: bold;
+    font-size: 9pt;
+    margin-bottom: 15px;
+}
+
+.signature-field {
+    margin: 12px 0;
+}
+
+.signature-field-label {
+    color: var(--text-gray);
+    font-size: 8pt;
+    margin-bottom: 3px;
+}
+
+.signature-field-line {
+    border-bottom: 1px solid var(--navy);
+    min-height: 20px;
+}
+
+/* Page break */
+.page-break {
+    page-break-before: always;
+}
