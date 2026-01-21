@@ -28,12 +28,17 @@ def main():
     else:
         print(f"Virtual environment already exists at {venv_dir}")
 
-    # Install dependencies
+    # Install dependencies directly (not editable install)
     print("Installing dependencies...")
-    subprocess.run([str(pip_path), "install", "-e", str(skill_dir)], check=True)
+    subprocess.run([
+        str(pip_path), "install",
+        "jinja2>=3.0",
+        "weasyprint>=60.0",
+        "pyyaml>=6.0"
+    ], check=True)
 
     print("\nBootstrap complete!")
-    print(f"To run scripts, use: {python_path} scripts/generate_fillable_pdf.py")
+    print(f"To render PDFs, use: {python_path} scripts/render_pdf.py --help")
 
 
 if __name__ == "__main__":
