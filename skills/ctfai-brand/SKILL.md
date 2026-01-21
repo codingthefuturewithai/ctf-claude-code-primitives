@@ -1,6 +1,6 @@
 ---
 name: ctf-claude-code-primitives:ctfai-brand
-description: Apply Coding the Future with AI brand styling. Use this skill when the user asks to create branded content, apply brand colors, style documents with CTFAI branding, or create presentations/websites/themes with company branding.
+description: Apply Coding the Future with AI brand styling. Use this skill when the user asks to create branded content, apply brand colors, style documents with CTFAI branding, create presentations/websites/themes with company branding, or generate branded PDFs (agreements, SOWs, proposals).
 user-invocable: true
 ---
 
@@ -85,23 +85,31 @@ Located at: `assets/CTF-banner.png`
 
 ## Bundled Scripts
 
+This skill includes Python scripts with external dependencies. A local virtual environment is used to isolate dependencies.
+
+### First-Time Setup (Bootstrap)
+
+Before using any scripts, check if `.venv` exists in the skill directory. If not, run:
+
+```bash
+python scripts/bootstrap.py
+```
+
+This creates a local virtual environment and installs dependencies. Only needs to run once.
+
 ### PDF Generator: `scripts/generate_fillable_pdf.py`
 
 Generates branded, fillable PDF documents (Consulting Services Agreement).
 
-**Dependencies**: `reportlab` (install via `pip install reportlab`)
-
-**Usage**:
+**Run using the local venv**:
 ```bash
-# Generate to current directory
-python scripts/generate_fillable_pdf.py
-
-# Specify output path
-python scripts/generate_fillable_pdf.py --output /path/to/contract.pdf
-
-# Use custom logo
-python scripts/generate_fillable_pdf.py --logo /path/to/logo.jpg --output contract.pdf
+# From the skill directory
+.venv/bin/python scripts/generate_fillable_pdf.py --output /path/to/contract.pdf
 ```
+
+**Arguments**:
+- `--output, -o`: Output PDF path (default: current directory)
+- `--logo`: Custom logo path (default: uses `assets/CTF-logo.jpg`)
 
 **What it creates**:
 - 2-page Consulting Services Agreement
@@ -112,3 +120,11 @@ python scripts/generate_fillable_pdf.py --logo /path/to/logo.jpg --output contra
 - Branded footer with tagline
 
 **When to use**: When user requests a consulting agreement, services contract, or branded legal document.
+
+### Script Execution Pattern
+
+Always use this pattern when running skill scripts:
+
+1. Determine skill directory (where this SKILL.md lives)
+2. Check if `.venv` exists; if not, run `python scripts/bootstrap.py`
+3. Run scripts with `.venv/bin/python scripts/<script>.py`

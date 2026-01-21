@@ -1,0 +1,11 @@
+[project]
+name = "ctfai-brand"
+version = "0.1.0"
+description = "CTFAI brand assets and PDF generation tools"
+requires-python = ">=3.9"
+dependencies = [
+    "reportlab>=4.0",
+]
+
+[project.scripts]
+ctfai-pdf = "scripts.generate_fillable_pdf:main"
