@@ -1,41 +1,71 @@
 ---
 name: ctf-claude-code-primitives:ctfai-brand
-description: Apply Coding the Future with AI brand styling. Use this skill when the user asks to create branded content, apply brand colors, style documents with CTFAI branding, create presentations/websites/themes with company branding, or generate branded PDFs.
+description: Apply Coding the Future with AI brand styling. Use this skill when the user asks to create branded content, apply brand colors, style documents with CTFAI branding, create presentations/websites/themes with company branding, or generate branded PDFs with fillable fields.
 user-invocable: true
 ---
 
-# Coding the Future with AI - Brand Guidelines
+# CTFAI Brand Skill
 
-Apply consistent branding to any artifact: PDFs, websites, presentations, themes, and more.
+Apply Coding the Future with AI (CTFAI) brand styling to any artifact. Generate branded PDFs with real fillable AcroForm fields.
 
-## Brand Colors
+## Brand Identity
 
-| Name | Hex | CSS Variable | Usage |
-|------|-----|--------------|-------|
-| Navy | `#1B2838` | `--navy` | Primary backgrounds, text |
-| Orange | `#F5A623` | `--orange` | Primary accent, CTAs, section numbers |
-| Blue | `#7DD3FC` | `--blue` | Secondary accent, labels |
-| Purple | `#C084FC` | `--purple` | Tertiary accent, gradients |
-| White | `#FFFFFF` | `--white` | Text on dark backgrounds |
-| Light Gray | `#F0F5FA` | `--light-gray` | Light backgrounds, boxes |
-| Text Gray | `#2d3748` | `--text-gray` | Body text |
+**Company**: Coding the Future with AI (CTFAI)
+**Principal**: Tim Kitchens
+**Domain**: AI strategy consulting, implementation, and education
+
+**Voice & Tone**:
+- Professional but approachable
+- Confident without arrogance
+- Clear and direct - avoid jargon unless speaking to technical audience
+- Forward-looking - emphasize transformation and possibilities
+- Favor active voice
+
+---
+
+## Color Palette
+
+| Name | Hex | Usage |
+|------|-----|-------|
+| Navy | `#1a365d` | Headers, primary brand |
+| Orange | `#dd6b20` | Accents, CTAs |
+| Blue | `#3182ce` | Links, secondary |
+| Purple | `#6b46c1` | AI/innovation themes |
+| Light Gray | `#f7fafc` | Backgrounds |
+| Dark Gray | `#2d3748` | Body text |
+
+---
 
 ## Typography
 
-- **Headings**: System sans-serif, bold
-- **Body**: System sans-serif, regular
-- **Sizes**: H1: 22pt, H2: 16pt, Body: 10pt
+**Primary**: Helvetica (PDF-safe, no font embedding needed)
+
+**Hierarchy**:
+- H1: 18pt, Helvetica-Bold, Navy
+- H2: 14pt, Helvetica-Bold, Navy
+- H3: 12pt, Helvetica-Bold, Dark Gray
+- Body: 11pt, Helvetica, Dark Gray
+- Small: 9pt, Helvetica, Gray
+
+---
 
 ## Visual Patterns
 
-- **Header**: Navy background, logo left, gradient bar (orange→blue→purple)
-- **Sections**: Orange numbered circles, navy titles
-- **Info boxes**: Light gray with orange left border
-- **Footer**: Navy with tagline
+**Header**:
+- Navy background bar spanning full width
+- White text for document title
+- Logo in top-left corner
+- Orange accent line below (3px)
 
-## Tagline
+**Sections**:
+- Navy section titles
+- Orange left border (4px)
+- Generous whitespace between sections
 
-> "Empowering teams with AI tools, knowledge, and strategy"
+**Footer**:
+- Light gray background
+- Orange accent line above
+- Centered text
 
 ---
 
@@ -43,98 +73,217 @@ Apply consistent branding to any artifact: PDFs, websites, presentations, themes
 
 | Asset | Path | Usage |
 |-------|------|-------|
-| Logo | `assets/CTF-logo.jpg` | Headers, dark backgrounds (45px typical) |
-| Banner | `assets/CTF-banner.png` | Hero sections, social covers |
-| Brand CSS | `assets/brand.css` | All brand styles for HTML/PDF |
+| Logo | `~/.claude/skills/ctfai-brand/assets/CTF-logo.jpg` | Headers, letterheads |
+| Banner | `~/.claude/skills/ctfai-brand/assets/CTF-banner.png` | Hero sections |
+| CSS | `~/.claude/skills/ctfai-brand/assets/brand.css` | Web artifacts |
 
 ---
 
-## PDF Generation (Template-Based)
+## PDF Generation with reportlab AcroForm
 
-Generate branded PDFs using HTML templates + CSS. Easy to customize or create new templates.
-
-### First-Time Setup
-
-If `.venv` doesn't exist in the skill directory:
+**Installation** (one-time):
 ```bash
-python scripts/bootstrap.py
+pip install reportlab
 ```
 
-### Usage
+### Creating Fillable Text Fields
 
-```bash
-# Built-in templates
-.venv/bin/python scripts/render_pdf.py --template agreement --output contract.pdf
-.venv/bin/python scripts/render_pdf.py --template sow --output sow.pdf
+```python
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.colors import HexColor
 
-# With custom data
-.venv/bin/python scripts/render_pdf.py --template sow --data project.yaml --output sow.pdf
+# Brand colors
+NAVY = HexColor("#1a365d")
+ORANGE = HexColor("#dd6b20")
+LIGHT_GRAY = HexColor("#f7fafc")
+DARK_GRAY = HexColor("#2d3748")
+WHITE = HexColor("#ffffff")
 
-# Custom template
-.venv/bin/python scripts/render_pdf.py --template mytemplate.html --data data.json --output output.pdf
+c = canvas.Canvas("output.pdf", pagesize=letter)
+form = c.acroForm
+
+# Text field with brand styling
+form.textfield(
+    name='client_name',           # Unique field identifier
+    tooltip='Enter client name',  # Hover help text
+    x=150, y=700,                 # Position (points from bottom-left)
+    width=300, height=20,         # Field size
+    borderStyle='underlined',     # Options: solid, inset, bevelled, underlined
+    borderColor=NAVY,
+    fillColor=WHITE,
+    textColor=DARK_GRAY,
+    fontSize=11,
+    fontName='Helvetica',
+    forceBorder=True
+)
 ```
 
-### Built-in Templates
+### Multiline Text Area
 
-| Template | Description |
-|----------|-------------|
-| `agreement` | Consulting Services Agreement (10 sections) |
-| `sow` | Statement of Work (7 sections with detail fields) |
-
-### Data Files (YAML/JSON)
-
-Override template defaults with a data file:
-
-```yaml
-# For agreement
-client_name: "Acme Corp"
-effective_date: "2026-01-21"
-sections:
-  - title: "Custom Section"
-    content: "Custom content here"
-
-# For sow
-sow_title: "AI Strategy Session"
-client_name: "Acme Corp"
-sow_number: "SOW-001"
-sections:
-  - title: "Scope"
-    description: "We will provide..."
-    items:
-      - "Strategy assessment"
-      - "Implementation roadmap"
+```python
+form.textfield(
+    name='scope_notes',
+    x=72, y=400,
+    width=468, height=100,
+    fieldFlags='multiline',       # Enables multi-line input
+    borderColor=LIGHT_GRAY,
+    fillColor=WHITE,
+    textColor=DARK_GRAY,
+    forceBorder=True
+)
 ```
 
-### Creating Custom Templates
+### Key Parameters
 
-1. Create an HTML file in `templates/`
-2. Extend `base.html` for header/footer/branding
-3. Use Jinja2 syntax for dynamic content
-4. Reference with `--template yourtemplate.html`
+| Parameter | Purpose |
+|-----------|---------|
+| `name` | Unique field ID (required) |
+| `value` | Pre-filled text |
+| `x`, `y` | Position in points (72 points = 1 inch) |
+| `width`, `height` | Field dimensions |
+| `maxlen` | Character limit |
+| `borderStyle` | solid, inset, bevelled, underlined |
+| `fieldFlags` | multiline, password, readOnly, required |
+| `tooltip` | Hover text |
+| `forceBorder` | Always show border |
 
-Example:
-```html
-{% extends "base.html" %}
-{% block content %}
-<h1>{{ title }}</h1>
-<p>{{ description }}</p>
-{% endblock %}
+### Drawing Branded Elements
+
+```python
+# Navy header bar
+c.setFillColor(NAVY)
+c.rect(0, 756, 612, 56, fill=True, stroke=False)
+
+# Orange accent line
+c.setStrokeColor(ORANGE)
+c.setLineWidth(3)
+c.line(0, 756, 612, 756)
+
+# Logo
+c.drawImage("path/to/CTF-logo.jpg", 36, 765, width=72, height=36,
+            preserveAspectRatio=True, mask='auto')
+
+# White text in header
+c.setFillColor(WHITE)
+c.setFont("Helvetica-Bold", 14)
+c.drawCentredString(306, 778, "CONSULTING SERVICES AGREEMENT")
+
+# Section title with orange left border
+c.setStrokeColor(ORANGE)
+c.setLineWidth(4)
+c.line(72, 650, 72, 630)
+c.setFillColor(NAVY)
+c.setFont("Helvetica-Bold", 12)
+c.drawString(80, 635, "1. Scope of Services")
+
+# Body text
+c.setFillColor(DARK_GRAY)
+c.setFont("Helvetica", 11)
+c.drawString(72, 610, "Consultant agrees to provide the following services:")
+
+# Finalize page and save
+c.showPage()
+c.save()
 ```
 
-### File Structure
+### Complete Minimal Example
 
+```python
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.colors import HexColor
+
+NAVY = HexColor("#1a365d")
+ORANGE = HexColor("#dd6b20")
+WHITE = HexColor("#ffffff")
+DARK_GRAY = HexColor("#2d3748")
+
+def create_branded_form(output_path, logo_path):
+    c = canvas.Canvas(output_path, pagesize=letter)
+    width, height = letter  # 612 x 792 points
+
+    # Header
+    c.setFillColor(NAVY)
+    c.rect(0, height - 60, width, 60, fill=True, stroke=False)
+    c.setStrokeColor(ORANGE)
+    c.setLineWidth(3)
+    c.line(0, height - 60, width, height - 60)
+
+    # Logo
+    c.drawImage(logo_path, 36, height - 50, width=80, height=40,
+                preserveAspectRatio=True, mask='auto')
+
+    # Doc title
+    c.setFillColor(WHITE)
+    c.setFont("Helvetica-Bold", 16)
+    c.drawCentredString(width/2, height - 38, "CONSULTING AGREEMENT")
+
+    # Form field: Client Name
+    c.setFillColor(DARK_GRAY)
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(72, height - 100, "Client Name:")
+
+    form = c.acroForm
+    form.textfield(
+        name='client_name',
+        x=170, y=height - 112,
+        width=350, height=20,
+        borderStyle='underlined',
+        borderColor=NAVY,
+        textColor=DARK_GRAY,
+        forceBorder=True
+    )
+
+    # Form field: Date
+    c.drawString(72, height - 140, "Effective Date:")
+    form.textfield(
+        name='effective_date',
+        x=170, y=height - 152,
+        width=150, height=20,
+        borderStyle='underlined',
+        borderColor=NAVY,
+        textColor=DARK_GRAY,
+        forceBorder=True
+    )
+
+    c.showPage()
+    c.save()
+    print(f"Created: {output_path}")
+
+# Usage
+create_branded_form("agreement.pdf", "~/.claude/skills/ctfai-brand/assets/CTF-logo.jpg")
 ```
-skills/ctfai-brand/
-├── SKILL.md
-├── assets/
-│   ├── CTF-logo.jpg
-│   ├── CTF-banner.png
-│   └── brand.css          # All brand styles
-├── templates/
-│   ├── base.html          # Base template (header, footer)
-│   ├── agreement.html     # Consulting agreement
-│   └── sow.html           # Statement of work
-└── scripts/
-    ├── bootstrap.py       # Set up venv
-    └── render_pdf.py      # Generic renderer
+
+---
+
+## Workflow
+
+When user requests a branded PDF:
+
+1. **Understand the need**: Interview user about document purpose, sections, what fields should be fillable
+2. **Propose structure**: List sections, identify fillable fields (client name, date, signature, etc.)
+3. **Get approval**: User confirms structure before generation
+4. **Generate code**: Write Python script using reportlab with brand styling
+5. **Execute**: Run script to produce PDF
+6. **Deliver**: Provide branded PDF with real fillable fields
+
+**The goal is a reusable template** - user fills in fields for each new client, not regenerating the PDF.
+
+---
+
+## For HTML/Web Artifacts
+
+Include `assets/brand.css` or apply these CSS variables:
+
+```css
+:root {
+  --ctfai-navy: #1a365d;
+  --ctfai-orange: #dd6b20;
+  --ctfai-blue: #3182ce;
+  --ctfai-purple: #6b46c1;
+  --ctfai-light: #f7fafc;
+  --ctfai-dark: #2d3748;
+  --ctfai-white: #ffffff;
+}
 ```
