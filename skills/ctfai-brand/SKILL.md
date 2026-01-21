@@ -81,13 +81,13 @@ Apply Coding the Future with AI (CTFAI) brand styling to any artifact. Generate 
 
 ## Script Management
 
-**All generated scripts and PDFs go in**: `<skill_dir>/generated/`
+**Scripts go in**: `<skill_dir>/generated/` (implementation detail, hidden from user)
 
-The skill directory is wherever this SKILL.md is installed (detect at runtime - see examples below).
+**PDFs go where the user wants**: Always ask "Where would you like me to save the PDF?" Default to current working directory if user says "here" or doesn't specify a preference.
 
 **Before generating a new script**:
 1. Check `<skill_dir>/generated/` for existing scripts
-2. If a similar script exists (e.g., `generate_csa_pdf.py` for consulting agreements), consider adapting it
+2. If a similar script exists (e.g., `generate_csa_pdf.py` for consulting agreements), reuse/adapt it
 3. Only create a new script if the document type is genuinely different
 
 **Cleanup**: If `generated/` contains more than 5 scripts, notify the user: "There are X scripts in the generated folder. Would you like me to clean up old ones?"
@@ -221,6 +221,7 @@ c.save()
 ### Complete Minimal Example
 
 ```python
+import sys
 from pathlib import Path
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
@@ -230,8 +231,6 @@ from reportlab.lib.colors import HexColor
 SCRIPT_DIR = Path(__file__).parent
 SKILL_DIR = SCRIPT_DIR.parent
 ASSETS_DIR = SKILL_DIR / "assets"
-GENERATED_DIR = SKILL_DIR / "generated"
-GENERATED_DIR.mkdir(exist_ok=True)
 
 NAVY = HexColor("#1a365d")
 ORANGE = HexColor("#dd6b20")
@@ -239,7 +238,7 @@ WHITE = HexColor("#ffffff")
 DARK_GRAY = HexColor("#2d3748")
 
 def create_branded_form(output_path, logo_path):
-    c = canvas.Canvas(output_path, pagesize=letter)
+    c = canvas.Canvas(str(output_path), pagesize=letter)
     width, height = letter  # 612 x 792 points
 
     # Header
@@ -250,7 +249,7 @@ def create_branded_form(output_path, logo_path):
     c.line(0, height - 60, width, height - 60)
 
     # Logo
-    c.drawImage(logo_path, 36, height - 50, width=80, height=40,
+    c.drawImage(str(logo_path), 36, height - 50, width=80, height=40,
                 preserveAspectRatio=True, mask='auto')
 
     # Doc title
@@ -290,11 +289,10 @@ def create_branded_form(output_path, logo_path):
     c.save()
     print(f"Created: {output_path}")
 
-# Usage - output to generated/ directory
-create_branded_form(
-    str(GENERATED_DIR / "agreement.pdf"),
-    str(ASSETS_DIR / "CTF-logo.jpg")
-)
+if __name__ == "__main__":
+    # Accept output path as command line argument
+    output_path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.cwd() / "agreement.pdf"
+    create_branded_form(output_path, ASSETS_DIR / "CTF-logo.jpg")
 ```
 
 ---
@@ -305,12 +303,13 @@ When user requests a branded PDF:
 
 1. **Check for existing scripts**: Look in `<skill_dir>/generated/` for reusable scripts
 2. **Understand the need**: Interview user about document purpose, sections, what fields should be fillable
-3. **Propose structure**: List sections, identify fillable fields (client name, date, signature, etc.)
-4. **Get approval**: User confirms structure before generation
-5. **Ensure venv exists**: If `.venv` doesn't exist in skill directory, create it and install reportlab
-6. **Generate code**: Write Python script to `<skill_dir>/generated/`
-7. **Execute with venv**: Run script using `<skill_dir>/.venv/bin/python` (or `\.venv\Scripts\python` on Windows)
-8. **Deliver**: Provide branded PDF (also in generated/ directory)
+3. **Ask output location**: "Where would you like me to save the PDF?" (default: current working directory)
+4. **Propose structure**: List sections, identify fillable fields (client name, date, signature, etc.)
+5. **Get approval**: User confirms structure before generation
+6. **Ensure venv exists**: If `.venv` doesn't exist in skill directory, create it and install reportlab
+7. **Generate code**: Write Python script to `<skill_dir>/generated/` (pass output path as argument)
+8. **Execute with venv**: Run script using `<skill_dir>/.venv/bin/python script.py <output_path>`
+9. **Deliver**: Confirm PDF location to user
 
 **The goal is a reusable template** - user fills in fields for each new client, not regenerating the PDF.
 
